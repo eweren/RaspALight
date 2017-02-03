@@ -1,0 +1,313 @@
+@font-face{
+  font-family: 'fancy';
+  src: url('Blacksword.otf');
+}
+@font-face{
+  font-family: 'mountain';
+  src: url('beyond_the_mountains.otf');
+}
+@font-face{
+  font-family: 'thin';
+  src: url('Tasty_Birds.otf');
+}
+h1{
+  color:rgba(0,0,0,0.5);
+  font-family:fancy;
+  font-size:3em;
+  line-height: 40%;
+}
+body {
+  padding-top:20px;
+  text-align:center;
+  font-family:fancy;
+}
+a{
+  text-decoration: none;
+  color:rgba(0,0,0,0.5);
+}
+a:visited{
+ color:rgba(0,0,0,0.5);
+ text-decoration: none;
+
+}
+
+@media only screen and (min-device-width: 481px) {
+      html {
+  	background-image: url(background.jpg);
+  	background-position:40% 0;
+  	background-size:auto 150%;
+      }
+      select {
+        font-family:fancy;
+ 	border: none;
+	padding-left:65px;
+  	margin-top:20px;
+  	margin-bottom:20px;
+	font-size:1em;
+  	width:300px;
+  	height:30px;
+	background:black;
+  	color:white;
+	opacity:0.5;
+      }
+      select option{
+	background:white;
+	color:black;
+      }
+      input[type=date]{
+        width:150px;
+        height:30px;
+        background:none;
+        text-align:center;
+        border:none;
+        border-bottom:1px solid black;
+        font-family:fancy;
+        font-size:1em;
+        opacity:0.5;
+      }
+      input[type=date]:hover{
+        width:150px;
+        height:28px;
+        background:none;
+        text-align:center;
+        border:none;
+        border-bottom:2px solid black;
+        font-family:fancy;
+        font-size:1.1em;
+        opacity:1;
+      }
+
+      input[type=time]{
+        width:150px;
+        height:30px;
+        background:none;
+        text-align:center;
+        border:none;
+        border-bottom:1px solid black;
+        font-family:fancy;
+        font-size:1em;
+        opacity:0.5;
+      }
+      input[type=time]:hover{
+        width:150px;
+        height:28px;
+        background:none;
+        text-align:center;
+        border:none;
+        border-bottom:2px solid black;
+        font-family:fancy;
+        font-size:1.1em;
+        opacity:1;
+      }
+      container {
+        margin-left:5%;
+        margin-right:5%;
+        text-align:center;
+        margin-right:5%;
+        text-align:center;
+      }
+      input[type=color]{
+        width:300px;
+        height:40px;
+        background:none;
+        border:none;
+        opacity:0.5;
+      }
+      input[type=color]:hover{
+        width:300px;
+        height:40px;
+        background:rgba(200,200,200,0.5);
+        border:none;
+      }
+      input[type=submit]:hover {
+        width:300px;
+        height:40px;
+        border:1px solid rgba(0,0,0,0.5);
+        background-color:rgba(200,200,200,0.5);
+        color:black;
+        border-radius:60px;
+        opacity:1;
+      }
+      input[type=submit] {
+        font-family:thin;
+        width:300px;
+        height:40px;
+        font-size:1.3em;
+        border:none;
+        background-color:black;
+        color:white;
+        border-radius:60px;
+        opacity:0.5;
+      }
+      td input[type=submit]:hover {
+	width:60px;
+        height:60px;
+        border:none;
+        border-radius:0px;
+        opacity:1;
+        box-shadow: 0px 0px 30px rgba(200, 200, 200, .5);
+      }
+      td input[type=submit] {
+        width:50px;
+        height:55px;
+        border:none;
+        color:white;
+        border-radius:0px;
+        opacity:0.5;
+      }
+      #color{
+	width:60px;
+	height:60px;
+      }
+      .myLabel {
+	position: relative;
+      }
+      .myLabel input {
+	position: absolute;
+	z-index: 2;
+	opacity: 0;
+	width:100%;
+	height:100%;
+      }
+      .myLabel {
+  	margin-left:auto;
+  	margin-right:auto;
+  	font-family:thin;
+  	width:296px;
+  	padding:4px;
+  	font-size:1.3em;
+  	border:none;
+  	background-color:black;
+  	color:white;
+	height:27px;
+  	opacity:0.5;
+      }
+      .myLabel:hover {
+	width:294px;
+        padding-top:3px;
+        padding-bottom:5px;
+	height:25px;
+	color:black;
+        background-color:rgba(200,200,200,0.5);
+        border:1px solid rgba(0,0,0,0.5);
+        opacity:1;
+      }
+}
+@media only screen and (max-device-width: 480px) {
+      html {
+  	background-image: url(background.jpg);
+  	background-position:30% 0;
+  	background-size:auto 150%;
+      }
+      select {
+        font-family:fancy;
+        border: none;
+        margin-top:40px;
+        margin-bottom:40px;
+	padding:5px;
+        font-size:2.3em;
+        width:600px;
+        height:60px;
+        background:black;
+        color:white;
+        opacity:0.5;
+	padding-left:120px;
+      }
+      select option{
+        background:white;
+        color:black;
+      }
+
+      input[type=date]{
+        width:90%;
+        height:100px;
+        background:none;
+        text-align:center;
+        border:none;
+        border-bottom:1px solid black;
+        font-family:fancy;
+	font-size:1.8em;
+        opacity:0.5;
+      }
+     input[type=time]{
+        width:90%;
+        height:100px;
+        background:none;
+        text-align:center;
+        border:none;
+        border-bottom:1px solid black;
+        border:none;
+        border-bottom:1px solid black;
+        font-family:fancy;
+	font-size:1.8em;
+        opacity:0.5;
+     }
+     container {
+        margin-left:5%;
+        margin-right:5%;
+        text-align:center;
+      }
+      input[type=color]{
+        width:600px;
+        height:80px;
+        background:none;
+        border:none;
+        opacity:0.5;
+      }
+      input[type=submit] {
+        font-family:thin;
+        width:600px;
+        height:80px;
+        font-size:3.9em;
+        border:none;
+        background-color:black;
+        color:white;
+        border-radius:120px;
+        opacity:0.5;
+      }
+      td input[type=submit]{
+        width:110px;
+        height:110px;
+        border:none;
+        border-radius:0px;
+        opacity:1;
+      }
+      #color{
+        width:120px;
+        height:120px;
+      }
+      .myLabel {
+	position: relative;
+      }
+      .myLabel input {
+	position: absolute;
+	z-index: 2;
+	opacity: 0;
+	width:100%;
+	height:100%;
+      }
+      .myLabel {
+  	margin-left:auto;
+  	margin-right:auto;
+  	font-family:thin;
+  	width:592px;
+  	padding:8px;
+  	font-size:2em;
+  	border:none;
+  	background-color:black;
+  	color:white;
+  	opacity:0.5;
+
+      }
+      .myLabel:hover {
+        background-color:rgba(0,0,0,0);
+        border:2px solid rgba(200,200,200,0.5)
+        opacity:1;
+      }
+      #timepicker{
+	width:400px;
+	font-size:2em;
+      }
+
+
+}
