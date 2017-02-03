@@ -166,12 +166,9 @@ if($fading != ""){
           <input type='submit' value='' style='background-color:#000;'></a>
         </form></td>
 	</tr>
-      </table></div><br><br>
-	  <form action="index.php" method="post" action="index.php?fading=true">
-		<input type='submit' value=''>
-	  </form>
-	  
-	  <br><br>
+      </table>
+    </div>	  
+    <br><br>
        <form action="upload.php" method="post" enctype="multipart/form-data">
         <div class="myLabel">
  	  <input type="file" name="datei">
