@@ -95,9 +95,16 @@
         </form></td><td>
         <form id="color" method="post" action="index.php?color=%23000">
           <input type='submit' value='' style='background-color:#000;'></a>
-        </form></td>
-	</tr>
+        </form></td></tr>
       </table>
+      <br><br>
+      <form action="upload.php" method="post" enctype="multipart/form-data">
+        <div class="myLabel">
+ 	        <input type="file" name="datei">
+	        <span>Hintergrundbild ausw&auml;hlen</span><br>
+	      </div><br>
+        <input type="submit" value="Hochladen">
+      </form>
     </container>
   </body>
 </html>
