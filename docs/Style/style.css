@@ -140,11 +140,12 @@ a:visited{
         opacity:0.5;
       }
       td input[type=button]:hover {
-	width:60px;
+	      width:60px;
         height:60px;
         border:none;
         border-radius:0px;
         opacity:1;
+        margin: 0;
         box-shadow: 0px 0px 30px rgba(200, 200, 200, .5);
       }
       td input[type=button] {
@@ -152,6 +153,10 @@ a:visited{
         height:55px;
         border:none;
         color:white;
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top: 2.5px;
+        margin-bottom: 2.5px;
         border-radius:0px;
         opacity:0.5;
       }
