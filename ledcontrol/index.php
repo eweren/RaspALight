@@ -54,7 +54,7 @@ if($fading != ""){
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Tinco Lightroom</title>
+    <title>RaspALight</title>
     <link rel="icon" type="image/png" href="Style/icon.png">
     <link rel="stylesheet" type="text/css" href="Style/style.css">
   </head>
@@ -65,9 +65,9 @@ if($fading != ""){
 	<table style="margin-left:auto; margin-right:auto;"><tr>
           <td id="timepicker"><input type='date' name='date' min='<?php echo("$datetoday"); ?>' value='<?php echo("$datetoday");?>'></td>
           <td id="timepicker"><input type='time' name='time' step='1' value='<?php echo("$timenow");?>'></td></tr><tr>
-	  <td id="timepicker" style="opacity:0.5;">Datum</td>
-          <td id="timepicker" style="opacity:0.5;">Uhrzeit und Dauer</td></tr></table>
-        <input type='submit' id='alarmBtn' value='Alarm stellen' style="margin-top:40px;">
+	  <td id="timepicker" style="opacity:0.5;">Date</td>
+          <td id="timepicker" style="opacity:0.5;">Time and Duration</td></tr></table>
+        <input type='submit' id='alarmBtn' value='Set Alarm' style="margin-top:40px;">
       </form>
       <?php
 	exec("pgrep -af ledcontrol/Scripts/alarm.py", $out);
@@ -84,10 +84,10 @@ if($fading != ""){
                 $i = $i+2;
              }
           }
-          echo("</select><br><input type='submit' value='Alarm abbrechen'></form>");
+          echo("</select><br><input type='submit' value='Cancel Alarm'></form>");
         }
       ?><br><br>
-      <h1>Farbauswahl</h1>
+      <h1>Colorpicker</h1>
       <br>
      <div style="width:100%; text-align:center;">
        <table id="colors" style="margin-left:auto;margin-right:auto;"><tr>
@@ -172,10 +172,10 @@ if($fading != ""){
     <br><br>
        <form action="upload.php" method="post" enctype="multipart/form-data">
         <div class="myLabel">
- 	  <input type="file" name="datei">
-	  <span>Hintergrundbild ausw&auml;hlen</span><br>
+ 	  <input type="file" name="data">
+	  <span>Select Background</span><br>
 	</div><br>
-        <input type="submit" value="Hochladen">
+        <input type="submit" value="Upload">
       </form>
     </container>
   </body>
