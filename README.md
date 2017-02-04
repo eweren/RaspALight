@@ -21,3 +21,5 @@ For your understanding of what i did there with all those files:
 -   fading.py     -> Script to let the strip fade through all its colors (by dordnung https://github.com/dordnung/raspberrypi-ledstrip/blob/master/fading.py), but not implemented into the webinterface at the moment
 -   killpython.py -> Kills the python-process with the id given by args
 -   setColor.py   -> Sets red, green and blue led to the given args
+
+For a slight demo, of how the side will look (all buttons without a function), you can go to https://eweren.github.io/RaspALight/
