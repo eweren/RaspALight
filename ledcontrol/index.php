@@ -55,6 +55,7 @@ if($fading != ""){
   <head>
     <meta charset="utf-8" />
     <title>Tinco Lightroom</title>
+    <link rel="icon" type="image/png" href="Style/icon.png">
     <link rel="stylesheet" type="text/css" href="Style/style.css">
   </head>
   <body>
@@ -167,7 +168,7 @@ if($fading != ""){
         </form></td>
 	</tr>
       </table>
-    </div>	  
+    </div>
     <br><br>
        <form action="upload.php" method="post" enctype="multipart/form-data">
         <div class="myLabel">
