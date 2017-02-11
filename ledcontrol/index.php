@@ -7,9 +7,11 @@ try{
 try{
   $time=$_GET['time'];
   $date=$_GET['date'];
+  $dur=$_GET['duration'];
 }catch(Exception $e){
   $time="";
   $date="";
+  $dur=30;
 }
 try{
   $abort=$_GET['abort'];
@@ -22,7 +24,7 @@ try{
   $fading="";
 }
 $datetoday=date("Y-m-d");
-$timenow=date("H:i:s");
+$timenow=date("H:i");
 $execute = shell_exec("sudo pigpiod");
 
 if($color != ""){
@@ -38,11 +40,10 @@ if($abort != ""){
 if($time != "" & $date != ""){
    $h = substr($time,0,2);
    $m = substr($time,3,2);
-   $dur = substr($time,6,2);
    $day=substr($date,8,2);
    $month=substr($date,5,2);
    $year=substr($date,0,4);
-   $execute = exec("python /var/www/html/ledcontrol/Scripts/alarm.py $year $month $day $h $m $dur");
+   $execute = exec("python /var/www/html/ledcontrol/Scripts/alarm.py $year $month $day $h $m $dur > /dev/null 2>/dev/null &");
 }
 if($fading != ""){
 	$execute = exec("python /var/www/html/ledcontrol/Scripts/fading.py");
@@ -61,28 +62,39 @@ if($fading != ""){
   <body>
     <container>
       <form  action="index.php" method="get">
-        <h1><a href="index.php">Alarm</a></h1>
-	<table style="margin-left:auto; margin-right:auto;"><tr>
-          <td id="timepicker"><input type='date' name='date' min='<?php echo("$datetoday"); ?>' value='<?php echo("$datetoday");?>'></td>
-          <td id="timepicker"><input type='time' name='time' step='1' value='<?php echo("$timenow");?>'></td></tr><tr>
-	  <td id="timepicker" style="opacity:0.5;">Date</td>
-          <td id="timepicker" style="opacity:0.5;">Time and Duration</td></tr></table>
+        <h1>
+          <a href="index.php">Alarm</a>
+        </h1>
+	      <table style="margin-left:auto; margin-right:auto;">
+          <tr>
+            <td id="timepicker"><input type='date' name='date' min='<?php echo("$datetoday"); ?>' value='<?php echo("$datetoday");?>'></td>
+            <td id="timepicker"><input type='time' name='time' step='60' value='<?php echo("$timenow");?>'></td>
+          </tr>
+          <tr>
+            <td id="timepicker" style="opacity:0.5;">Date</td>
+            <td id="timepicker" style="opacity:0.5;">Time</td>
+          </tr>
+          <tr>
+            <td colspan="2"><input type='range' name='duration' min='0' max='60'></td>
+          </tr>
+          <tr>
+            <td id="timepicker" colspan="2" style="opacity:0.5;">Duration</td>
+          </tr>
+        </table>
         <input type='submit' id='alarmBtn' value='Set Alarm' style="margin-top:40px;">
       </form>
       <?php
-	exec("pgrep -af ledcontrol/Scripts/alarm.py", $out);
-	if($out[1] != ""){
+      	exec("pgrep -af ledcontrol/Scripts/alarm.py", $out);
+        if($out[1] != ""){
       	  echo("<form action='index.php' method='get'>");
           echo("<select name='abort'>");
-          $i=1;
-          if($out[$i]!= "") {
-             while($out[$i] != ""){
-                $arrayAlarms = explode(" ", $out[$i]);
-                if($arrayAlarms[1] = "python" & $arrayAlarms[3]="/var/www/html/ledcontrol/Scripts/alarm.py"){
-                  echo("<option style='padding-left:40px;' value='$arrayAlarms[0]'>$arrayAlarms[5].$arrayAlarms[4] - $arrayAlarms[6]:$arrayAlarms[7] - $arrayAlarms[8]");
-                }
-                $i = $i+2;
-             }
+          $i=0;
+          while(i < sizeof($out) - 1){
+            $arrayAlarms = explode(" ", $out[$i]);
+              if($arrayAlarms[1] = "python" & $arrayAlarms[3]="/var/www/html/ledcontrol/Scripts/alarm.py"){
+                echo("<option style='padding-left:40px;' value='$arrayAlarms[0]'>$arrayAlarms[5].$arrayAlarms[4] - $arrayAlarms[6]:$arrayAlarms[7] - $arrayAlarms[8]");
+              }
+              $i = $i+1;
           }
           echo("</select><br><input type='submit' value='Cancel Alarm'></form>");
         }
@@ -90,93 +102,152 @@ if($fading != ""){
       <h1>Colorpicker</h1>
       <br>
      <div style="width:100%; text-align:center;">
-       <table id="colors" style="margin-left:auto;margin-right:auto;"><tr>
-        <td><form id="color" method="post" action="index.php?color=%23FF5500">
-          <input type='submit' value='' style='background-color:#FA0;'></a>
-	</form></td><td>
-	<form id="color" method="post" action="index.php?color=%23FF0000">
-          <input type='submit' value='' style='background-color:#F00;'></a>
-        </form></td><td>
-	<form id="color" method="post" action="index.php?color=%2300FF00">
-          <input type='submit' value='' style='background-color:#0F0;'></a>
-        </form></td><td>
-	<form id="color" method="post" action="index.php?color=%230000FF">
-          <input type='submit' value='' style='background-color:#00F;'></a>
-        </form></td><td>
-	<form id="color" method="post" action="index.php?color=%23FFFFFF">
-          <input type='submit' value='' style='background-color:white;'></a>
-        </form></td></tr><tr>
-        <td><form id="color" method="post" action="index.php?color=%23FF2200">
-          <input type='submit' value='' style='background-color:#F70;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23AA0000">
-          <input type='submit' value='' style='background-color:#C00;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%2300AA00">
-          <input type='submit' value='' style='background-color:#0C0;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%230000AA">
-          <input type='submit' value='' style='background-color:#00C;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23AAAAAA">
-          <input type='submit' value='' style='background-color:#CCC;'></a>
-        </form></td></tr><tr>
-        <td><form id="color" method="post" action="index.php?color=%23AA1100">
-          <input type='submit' value='' style='background-color:#A40;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23550000">
-          <input type='submit' value='' style='background-color:#A00;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23005500">
-          <input type='submit' value='' style='background-color:#0A0;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23000055">
-          <input type='submit' value='' style='background-color:#00A;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23555555">
-          <input type='submit' value='' style='background-color:#AAA;'></a>
-        </form></td></tr><tr>
-        <td><form id="color" method="post" action="index.php?color=%23770D00">
-          <input type='submit' value='' style='background-color:#720;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23110000">
-          <input type='submit' value='' style='background-color:#500;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23001100">
-          <input type='submit' value='' style='background-color:#050;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23000011">
-          <input type='submit' value='' style='background-color:#005;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23111111">
-          <input type='submit' value='' style='background-color:#555;'></a>
-        </form></td></tr><tr>
-        <td><form id="color" method="post" action="index.php?color=%23100200">
-          <input type='submit' value='' style='background-color:#400F00;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23020000">
-          <input type='submit' value='' style='background-color:#200;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23000200">
-          <input type='submit' value='' style='background-color:#020;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23000002">
-          <input type='submit' value='' style='background-color:#002;'></a>
-        </form></td><td>
-        <form id="color" method="post" action="index.php?color=%23000">
-          <input type='submit' value='' style='background-color:#000;'></a>
-        </form></td>
-	</tr>
-      </table>
-    </div>
-    <br><br>
+       <table id="colors" style="margin-left:auto;margin-right:auto;">
+         <tr>
+           <td>
+             <form id="color" method="post" action="index.php?color=%23FF5500">
+               <input type='submit' value='' style='background-color:#FA0;'>
+             </form>
+           </td>
+           <td>
+             <form id="color" method="post" action="index.php?color=%23FF0000">
+               <input type='submit' value='' style='background-color:#F00;'>
+             </form>
+           </td>
+           <td>
+             <form id="color" method="post" action="index.php?color=%2300FF00">
+               <input type='submit' value='' style='background-color:#0F0;'>
+             </form>
+           </td>
+           <td>
+             <form id="color" method="post" action="index.php?color=%230000FF">
+               <input type='submit' value='' style='background-color:#00F;'>
+             </form>
+           </td>
+           <td>
+	            <form id="color" method="post" action="index.php?color=%23FFFFFF">
+                <input type='submit' value='' style='background-color:white;'></a>
+              </form>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23FF2200">
+                <input type='submit' value='' style='background-color:#F70;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23AA0000">
+                <input type='submit' value='' style='background-color:#C00;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%2300AA00">
+                <input type='submit' value='' style='background-color:#0C0;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%230000AA">
+                <input type='submit' value='' style='background-color:#00C;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23AAAAAA">
+                <input type='submit' value='' style='background-color:#CCC;'></a>
+              </form>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23AA1100">
+                <input type='submit' value='' style='background-color:#A40;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23550000">
+                <input type='submit' value='' style='background-color:#A00;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23005500">
+                <input type='submit' value='' style='background-color:#0A0;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23000055">
+                <input type='submit' value='' style='background-color:#00A;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23555555">
+                <input type='submit' value='' style='background-color:#AAA;'></a>
+              </form>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23770D00">
+                <input type='submit' value='' style='background-color:#720;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23110000">
+                <input type='submit' value='' style='background-color:#500;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23001100">
+                <input type='submit' value='' style='background-color:#050;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23000011">
+                <input type='submit' value='' style='background-color:#005;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23111111">
+                <input type='submit' value='' style='background-color:#555;'></a>
+              </form>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23100200">
+                <input type='submit' value='' style='background-color:#400F00;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23020000">
+                <input type='submit' value='' style='background-color:#200;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23000200">
+                <input type='submit' value='' style='background-color:#020;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23000002">
+                <input type='submit' value='' style='background-color:#002;'></a>
+              </form>
+            </td>
+            <td>
+              <form id="color" method="post" action="index.php?color=%23000">
+                <input type='submit' value='' style='background-color:#000;'></a>
+              </form>
+            </td>
+	         </tr>
+         </table>
+       </div>
+       <br><br>
        <form action="upload.php" method="post" enctype="multipart/form-data">
-        <div class="myLabel">
- 	  <input type="file" name="data">
-	  <span>Select Background</span><br>
-	</div><br>
-        <input type="submit" value="Upload">
-      </form>
-    </container>
-  </body>
+         <div class="myLabel">
+ 	         <input type="file" name="data">
+	          <span>Select Background</span><br>
+          </div><br>
+          <input type="submit" value="Upload">
+       </form>
+     </container>
+   </body>
 </html>

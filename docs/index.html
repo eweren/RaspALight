@@ -12,9 +12,15 @@
         <h1><a href="index.html">Alarm</a></h1>
 	      <table style="margin-left:auto; margin-right:auto;"><tr>
           <td id="timepicker"><input type='date' name='date'></td>
-          <td id="timepicker"><input type='time' name='time' step='1'></td></tr><tr>
+          <td id="timepicker"><input type='time' name='time' step='60'></td></tr><tr>
 	        <td id="timepicker" style="opacity:0.5;">Date</td>
-          <td id="timepicker" style="opacity:0.5;">Time and Duration</td></tr></table>
+          <td id="timepicker" style="opacity:0.5;">Time</td></tr>
+          <tr>
+            <td colspan="2"><input type='range' name='duration' min='0' max='60'></td>
+          </tr>
+          <tr>
+            <td id="timepicker" colspan="2" style="opacity:0.5;">Duration</td>
+          </tr></table>
         <input type='button' id='alarmBtn' value='setAlarm' style="margin-top:40px;">
       </form><br><br>
       <h1>Colorpicker</h1>
