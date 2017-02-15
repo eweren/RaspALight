@@ -49,8 +49,8 @@ if($time != "" & $date != ""){
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Tinco Lightroom</title>
-    <link rel="icon" href="Style/tincoicon.png">
+    <title>RaspALight</title>
+    <link rel="icon" href="Style/icon.png">
     <link rel="stylesheet" type="text/css" href="Style/style.css">
   </head>
   <body>
@@ -60,12 +60,12 @@ if($time != "" & $date != ""){
 	<table style="margin-left:auto; margin-right:auto;"><tr>
           <td><input type='date' name='date' min='<?php echo("$datetoday"); ?>' value='<?php echo("$datetoday");?>'></td>
           <td><input type='time' name='time' step='60' value='<?php echo("$timenow2");?>'></td></tr><tr>
-	  <td id="timepicker" style="opacity:0.5;">Datum</td>
-          <td id="timepicker" style="opacity:0.5;">Uhrzeit</td></tr>
+	  <td id="timepicker" style="opacity:0.5;">Date</td>
+          <td id="timepicker" style="opacity:0.5;">Time</td></tr>
 	  <tr><td colspan="2"><input type='range' min='0' max='60' name='duration'></td></tr>
-	  <tr><td colspan="2" id="timepicker" style="opacity:0.5;">Dauer</td></tr>
+	  <tr><td colspan="2" id="timepicker" style="opacity:0.5;">Duration</td></tr>
 	</table>
-        <input type='submit' id='alarmBtn' value='Alarm stellen' style="margin-top:40px;">
+        <input type='submit' id='alarmBtn' value='set alarm' style="margin-top:40px;">
       </form>
       <?php
 	exec("pgrep -af ledcontrol/Scripts/alarm.py", $out);
@@ -80,7 +80,7 @@ if($time != "" & $date != ""){
                 }
                 $i = $i+1;
              }
-          echo("</select><br><input type='submit' value='Alarm abbrechen'></form>");
+          echo("</select><br><input type='submit' value='abort alarm'></form>");
         }
       ?><br><br>
       <h1>Farbauswahl</h1>
@@ -168,9 +168,9 @@ if($time != "" & $date != ""){
        <form action="upload.php" method="post" enctype="multipart/form-data">
         <div class="myLabel">
  	  <input type="file" name="datei">
-	  <span>Hintergrundbild ausw&auml;hlen</span><br>
+	  <span>select background</span><br>
 	</div><br>
-        <input type="submit" value="Hochladen">
+        <input type="submit" value="upload">
       </form>
     </container>
   </body>
