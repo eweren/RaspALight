@@ -16,17 +16,7 @@ try{
   $abort=$_GET['abort'];
 }catch(Exception $e){
   $abort="";
-}/*
-try{
-  $fading=$_GET['fading'];
-}catch(Exception $e){
-  $fading=False;
 }
-try{
-  $fadingabort=$_GET['fadingabort'];
-}catch(Exception $e){
-  $fadingabort="";
-}*/
 $datetoday=date("Y-m-d");
 $timenow=date("H:i:s");
 $execute = shell_exec("sudo pigpiod");
@@ -54,11 +44,6 @@ if($time != "" & $date != ""){
    $year=substr($date,0,4);
    $execute = exec("python /var/www/html/ledcontrol/Scripts/alarm.py $year $month $day $h $m $dur > /dev/null 2>/dev/null &");
 }
-/*
-if($fading == True){
-   $execute = exec("python /var/www/html/ledcontrol/Scripts/fading.py");
-}
-*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -179,26 +164,6 @@ if($fading == True){
         </form></td>
 	</tr>
       </table></div><br>
-<?php /*	      <?php
-        exec("pgrep -af ledcontrol/Scripts/fading.py", $out1);
-        if($out1[1] != ""){
-	  $arrayFadings = explode(" ", $out[$i]);
-          if($arrayFadings[1] = "python" & $arrayFadings[3]="/var/www/html/ledcontrol/Scripts/fading.py"){
-	    echo("<form action='index.php' method='get' action='index.php?fading=true'>
-              <input type='hidden' name='fading' value='fading'>
-              <input id='smallbtn' type='submit' value='fading'>
-              </form><br><form action='index.php' method='get'>
-              <input type='hidden' name='fadingabort' value='$arrayFadings[0]'>
-              <input type='submit' id='smallbtn' value='fadingabort'>
-              </form>");
-           }
-        }else{
-	  echo("<form action='index.php' method='get' action='index.php>
-              <input type='hidden' name='fading' value='fading'>
-              <input type='submit' value='fading'>
-              </form>");
-	}
-      ?>*/?>
 	  <br>
        <form action="upload.php" method="post" enctype="multipart/form-data">
         <div class="myLabel">
