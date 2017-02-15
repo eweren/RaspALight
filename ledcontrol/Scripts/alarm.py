@@ -6,7 +6,7 @@ RED_PIN   = 22
 
 GREEN_PIN = 24
 
-BLUE_PIN  = 22
+BLUE_PIN  = 17
 
 # Number of brightness change per step (more is faster, less is slower).
 
@@ -164,11 +164,19 @@ while abort == False:
 
 print ("Aborting...")
 
+time.sleep(300)
+counter=255;
+while bright>0:
+	 brightChanged = True
+         time.sleep(1)
+         brightChanged = False
+         setLights(RED_PIN, r)
+         setLights(GREEN_PIN, g)
+         bright = bright - STEPS
 
-pi.set_PWM_dutycycle(RED_PIN, 80)
-pi.set_PWM_dutycycle(GREEN_PIN, 10)
+pi.set_PWM_dutycycle(RED_PIN, 0)
+pi.set_PWM_dutycycle(GREEN_PIN, 0)
 
 time.sleep(0.5)
 
 pi.stop()
-
