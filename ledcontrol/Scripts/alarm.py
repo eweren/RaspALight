@@ -1,12 +1,17 @@
 ###### CONFIGURE THIS ######
 
 # The Pins. Use Broadcom numbers.
+file = open(“init.save”, “r”) 
+variables file.read()
+RED_PIN,GREEN_PIN,BLUE_PIN,CUT_OFF_TIME = x.split(“,”)
+print (RED_PIN)
+print(BLUE_PIN)
+print(GREEN_PIN)
+#RED_PIN   = 22
 
-RED_PIN   = 22
+#GREEN_PIN = 24
 
-GREEN_PIN = 24
-
-BLUE_PIN  = 22
+#BLUE_PIN  = 17
 
 # Number of brightness change per step (more is faster, less is slower).
 
@@ -43,6 +48,8 @@ hp = sys.argv[4]
 mp = sys.argv[5]
 
 duration =sys.argv[6]
+
+cutofftime = sys.argv[7]
 
 startzeit=datetime.datetime(2000, 1, 1, 1, 1, 1)
 
@@ -129,7 +136,12 @@ start_new_thread(checkKey, ())
 print ("c = Wecker abbrechen")
 
 
-
+def cut_off():
+    cutofftime
+    while  cutofftime > 0:
+            time.sleep(60)
+            cutofftime = cutofftim - 1;
+    abort = true;
 
 
 setLights(RED_PIN, r)
@@ -160,15 +172,12 @@ while abort == False:
 
                 elif bright >= 255:
                         print (time.time())
-                        abort=True;
-
+                        while  cutofftime > 0:
+                                time.sleep(60)
+                                cutofftime = cutofftime - 1;
+                        abort = true;
 print ("Aborting...")
-
-
-pi.set_PWM_dutycycle(RED_PIN, 80)
-pi.set_PWM_dutycycle(GREEN_PIN, 10)
 
 time.sleep(0.5)
 
 pi.stop()
-

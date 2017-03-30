@@ -1,5 +1,4 @@
 <?php
-#move_uploaded_file($_FILES['datei']['tmp_name'], 'upload/'.$_FILES['datei']['name']);
 $temp = explode(".", $_FILES["datei"]["name"]);
 $newfilename = "background.jpg";
 move_uploaded_file($_FILES["datei"]["tmp_name"], "Style/" . $newfilename);
