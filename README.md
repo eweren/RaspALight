@@ -1,11 +1,11 @@
-# RaspALight
+ # RaspALight
 A project making a smooth light-alarm clock with the help of a Raspberry Pi and LED light strips.
 
 
 For setting up this project, you have to make sure, that:
-1 - you have already installed a web server on your Pi
-2 - you have soldered or pinned the led strip to your GPIO-pins
-3 - you have pigpiod installed
+1 - you have already installed a web server on your Pi (-> https://www.elektronik-kompendium.de/sites/raspberry-pi/1905271.htm in combination with https://www.elektronik-kompendium.de/sites/raspberry-pi/1905281.htm for PHP5)
+2 - you have soldered or pinned the led strip to your GPIO-pins (-> http://dordnung.de/raspberrypi-ledstrip/)
+3 - you have pigpiod installed (-> http://abyz.co.uk/rpi/pigpio/download.html)
 
 To finalize the project, you just have to go to your web server folder (/var/www/html/).
 At this time, there should only be an index.html file. You can delete it an paste all the stuff of this repository into the html-folder.
