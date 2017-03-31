@@ -12,14 +12,31 @@
 }
 h1{
   color:rgba(0,0,0,0.5);
-  font-family:fancy;
+  font-family:thin;
   font-size:3em;
   line-height: 40%;
 }
-body {
-  padding-top:20px;
-  text-align:center;
-  font-family:fancy;
+td{
+  text-align: center;
+}
+
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+}
+
+.text{
+  opacity:0.5;
+}
+html {
+  overflow-x: hidden;
 }
 a{
   text-decoration: none;
@@ -31,14 +48,185 @@ a:visited{
 
 }
 
-@media only screen and (min-device-width: 481px) {
+@media only screen and (min-device-width: 1000px) {
       html {
   	background-image: url(background.jpg);
   	background-position:40% 0;
-  	background-size:auto 150%;
+  	background-size: auto;
+    background-repeat: no-repeat;
       }
+      body {
+        text-align:center;
+        font-family:thin;
+        width:400px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: rgba(255,255,255,0.8);
+      }
+      #pop-out{
+        z-index:1;
+        position:fixed;
+        height:100%;
+        width:420px;
+        top:0px;
+        right:-20px;
+        border: none;
+        background:transparent;
+      }
+      #init{
+        position: absolute;
+        z-index:100;
+        top:20px;
+        right:20px;
+        width:80px;
+        border-radius: 5px;
+        padding:5px;
+        border: 1px solid white;
+        background-color: rgba(255,255,255,0.8);
+      }
+      #init:hover{
+        position: absolute;
+        z-index: 100;
+        top:20px;
+        right:20px;
+        padding:5px;
+        width:80px;
+        border-radius: 5px;
+        background-color: white;
+        border: 2px solid black;
+      }
+      .hidden{
+        display:none;
+      }
+      /* Popup container - can be anything you want */
+      .popup {
+          position: relative;
+          display: inline-block;
+          cursor: pointer;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          z-index:100;
+      }
+
+      /* The actual popup */
+      .popuptext {
+          position: fixed;
+          z-index: 1;
+          top: 0px;
+          right: 0px;
+          visibility: hidden;
+          width: 400px;
+          height:100%;
+          text-align: center;
+          border-left: 2px dashed white;
+      }
+
+      /* Toggle this class - hide and show the popup */
+      .show {
+          visibility: visible;
+          -webkit-animation: fadeIn 1s;
+          animation: fadeIn 1s;
+      }
+      #timepicker{
+	font-size:1.3em;
+  z-index: -10;
+      }
+      .floater{
+	width:100%;
+	margin-left:auto;
+	margin-right:auto;
+	float:left;
+      }
+      input{
+	background-color:transparent;
+      }
+input[type=range] {
+    -webkit-appearance: none;
+    width: 300px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+    margin-top: -4px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+input[type=range]::-moz-range-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+    width: 300px;
+    height: 5px;
+
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #777;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ddd;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ccc;
+}
       select {
-        font-family:fancy;
+        font-family:thin;
  	border: none;
 	padding-left:65px;
   	margin-top:20px;
@@ -55,54 +243,106 @@ a:visited{
 	color:black;
       }
       input[type=date]{
-        width:150px;
+        width:300px;
         height:30px;
         background:none;
         text-align:center;
         border:none;
         border-bottom:1px solid black;
-        font-family:fancy;
+        font-family:thin;
         font-size:1em;
         opacity:0.5;
       }
       input[type=date]:hover{
-        width:150px;
-        height:28px;
+        width:300px;
+        height:29px;
         background:none;
         text-align:center;
         border:none;
         border-bottom:2px solid black;
-        font-family:fancy;
+        font-family:thin;
         font-size:1.1em;
         opacity:1;
       }
-
+      input[type=date]:focus{
+        width:300px;
+        height:29px;
+        background:none;
+        text-align:center;
+        border:none;
+        border-bottom:2px solid black;
+        font-family:thin;
+        font-size:1.1em;
+        opacity:1;
+      }
+      input[type=number]{
+          width: 300px;
+          height:30px;
+          border:none;
+          border-bottom: 1px solid black;
+          font-family: thin;
+          font-size:1em;
+          opacity:0.5;
+          text-align:center;
+          background: none;
+      }
+      input[type=number]:hover{
+          width: 300px;
+          height:29px;
+          border:none;
+          border-bottom: 2px solid black;
+          font-family: thin;
+          font-size:1.1em;
+          opacity:1;
+          text-align:center;
+          background: none;
+      }
+      input[type=number]:focus{
+          width: 300px;
+          height:29px;
+          border:none;
+          border-bottom: 2px solid black;
+          font-family: thin;
+          font-size:1.1em;
+          opacity:1;
+          text-align:center;
+          background: none;
+      }
       input[type=time]{
-        width:150px;
+        width:300px;
         height:30px;
         background:none;
         text-align:center;
         border:none;
         border-bottom:1px solid black;
-        font-family:fancy;
+        font-family:thin;
         font-size:1em;
         opacity:0.5;
       }
       input[type=time]:hover{
-        width:150px;
-        height:28px;
+        width:300px;
+        height:29px;
         background:none;
         text-align:center;
         border:none;
         border-bottom:2px solid black;
-        font-family:fancy;
+        font-family:thin;
+        font-size:1.1em;
+        opacity:1;
+      }
+      input[type=time]:focus{
+        width:300px;
+        height:29px;
+        background:none;
+        text-align:center;
+        border:none;
+        border-bottom:2px solid black;
+        font-family:thin;
         font-size:1.1em;
         opacity:1;
       }
       container {
         margin-left:5%;
-        margin-right:5%;
-        text-align:center;
         margin-right:5%;
         text-align:center;
       }
@@ -193,14 +433,92 @@ a:visited{
         opacity:1;
       }
 }
-@media only screen and (max-device-width: 480px) {
+@media only screen and (max-device-width: 999px) {
       html {
   	background-image: url(background.jpg);
   	background-position:30% 0;
   	background-size:auto 150%;
       }
+      body {
+        text-align:center;
+        font-family:thin;
+        width:800px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: rgba(255,255,255,0.5);
+      }
+      output{
+        font-size: 3em;
+      }
+      #pop-out{
+        z-index:1;
+        position:fixed;
+        height:100%;
+        width:100%;
+        top:0px;
+        left:0px;
+        border: none;
+        background:transparent;
+      }
+      #init{
+        position: absolute;
+        z-index:100;
+        top:40px;
+        right:40px;
+        width:200px;
+        border-radius: 10px;
+        opacity: 0.5;
+        padding:10px;
+        border: 2px solid white;
+      }
+      #init:hover{
+        position: absolute;
+        z-index: 100;
+        top:40px;
+        right:40px;
+        padding:10;
+        width:200px;
+        border-radius: 10px;
+        background-color: white;
+        border: 2px solid black;
+      }
+      .hidden{
+        display:none;
+      }
+      /* Popup container - can be anything you want */
+      .popup {
+          position: relative;
+          display: inline-block;
+          cursor: pointer;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          z-index:100;
+          font-size: 3em;
+      }
+
+      /* The actual popup */
+      .popuptext {
+          position: fixed;
+          z-index: 1;
+          top: 0px;
+          left: 0px;
+          visibility: hidden;
+          width: 100%;
+          height:100%;
+          text-align: center;
+          border: none;
+      }
+
+      /* Toggle this class - hide and show the popup */
+      .show {
+          visibility: visible;
+          -webkit-animation: fadeIn 1s;
+          animation: fadeIn 1s;
+      }
       select {
-        font-family:fancy;
+        font-family:thin;
         border: none;
         margin-top:40px;
         margin-bottom:40px;
@@ -217,30 +535,76 @@ a:visited{
         background:white;
         color:black;
       }
+      input{
+	background-color:transparent;
+      }
+input[type=range]:focus {
+  outline: none;
+}
 
-      input[type=date]{
-        width:90%;
+input[type=range] {
+  width: 600px;
+  height:80px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 8px solid gray;
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  cursor: pointer;
+  margin-top: -14px;
+}
+
+input[type=range]::-moz-range-thumb {
+  border:8px solid gray;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  cursor: pointer;
+  margin-top: -14px;
+}
+
+input[type=range]::-ms-thumb {
+  border: 8px solid silver;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+     input[type=date]{
+        width:600px;
         height:100px;
         background:none;
         text-align:center;
         border:none;
         border-bottom:1px solid black;
-        font-family:fancy;
-	font-size:1.8em;
-        opacity:0.5;
+        font-family:thin;
+	      font-size:3em;
+      }
+      input[type=number]{
+          width: 600px;
+          height:100px;
+          border:none;
+          border-bottom: 1px solid black;
+          font-family: thin;
+          font-size:3em;
+          text-align:center;
+          background: none;
       }
      input[type=time]{
-        width:90%;
+        width:600px;
         height:100px;
         background:none;
         text-align:center;
         border:none;
         border-bottom:1px solid black;
-        border:none;
-        border-bottom:1px solid black;
-        font-family:fancy;
-	font-size:1.8em;
-        opacity:0.5;
+        font-family:thin;
+	      font-size:3em;
      }
      container {
         margin-left:5%;
@@ -257,7 +621,7 @@ a:visited{
       input[type=submit] {
         font-family:thin;
         width:600px;
-        height:80px;
+        height:100px;
         font-size:3.9em;
         border:none;
         background-color:black;
@@ -299,15 +663,14 @@ a:visited{
   	opacity:0.5;
 
       }
-      .myLabel:hover {
-        background-color:rgba(0,0,0,0);
-        border:2px solid rgba(200,200,200,0.5)
-        opacity:1;
-      }
-      #timepicker{
-	width:400px;
-	font-size:2em;
-      }
 
+      #timepicker{
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
+	width:600px;
+	font-size:2em;
+  z-index: -10;
+      }
 
 }

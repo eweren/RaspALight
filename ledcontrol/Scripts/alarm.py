@@ -1,13 +1,17 @@
 ###### CONFIGURE THIS ######
 
 # The Pins. Use Broadcom numbers.
-
-RED_PIN   = 22
-
-GREEN_PIN = 24
-
-BLUE_PIN  = 17
-
+FILE = open("/var/www/html/ledcontrol/Scripts/pins.save", "r")
+VARIABLES = FILE.read()
+RED_PIN,GREEN_PIN,BLUE_PIN,CUT_OFF_TIME = VARIABLES.split(",")
+RED_PIN = int(RED_PIN)
+GREEN_PIN = int(GREEN_PIN)
+BLUE_PIN = int(BLUE_PIN)
+CUT_OFF_TIME = int(CUT_OFF_TIME)
+print (RED_PIN)
+print(BLUE_PIN)
+print(GREEN_PIN)
+print(CUT_OFF_TIME)
 # Number of brightness change per step (more is faster, less is slower).
 
 # You also can use 0.X floats.
@@ -129,7 +133,12 @@ start_new_thread(checkKey, ())
 print ("c = Wecker abbrechen")
 
 
-
+def cut_off():
+    cutofftime
+    while  cutofftime > 0:
+            time.sleep(60)
+            CUT_OFF_TIME = CUT_OFF_TIME - 1;
+    abort = true;
 
 
 setLights(RED_PIN, r)
@@ -138,10 +147,6 @@ setLights(GREEN_PIN, g)
 
 setLights(BLUE_PIN, b)
 
-
-
-
-print(time.time())
 while abort == False:
         hops = float(durationint)
         if state and not brightChanged:
@@ -159,24 +164,17 @@ while abort == False:
                         bright = bright + STEPS
 
                 elif bright >= 255:
-                        print (time.time())
-                        abort=True;
-
+                        print("Alarm finished")
+                        while  CUT_OFF_TIME > 0:
+                                CUT_OFF_TIME = CUT_OFF_TIME - 1;
+                                time.sleep(60)
+                        abort = true;
 print ("Aborting...")
+setLights(RED_PIN, 0)
 
-time.sleep(300)
-counter=255;
-while bright>0:
-	 brightChanged = True
-         time.sleep(1)
-         brightChanged = False
-         setLights(RED_PIN, r)
-         setLights(GREEN_PIN, g)
-         bright = bright - STEPS
+setLights(GREEN_PIN, 0)
 
-pi.set_PWM_dutycycle(RED_PIN, 0)
-pi.set_PWM_dutycycle(GREEN_PIN, 0)
-
+setLights(BLUE_PIN, 0)
 time.sleep(0.5)
 
 pi.stop()
