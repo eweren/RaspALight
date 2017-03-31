@@ -18,14 +18,4 @@ To make sure, that you have access to the LED functionality, you have to make su
       sudo nano /etc/crontab
       Add the following line to the end of the file:
       @reboot root pigpiod
-
-Now, you can already access your website. To customize it, you can upload and change the background via the website, and do the rest in the index.php and style.css files.
-
-For you, to understand what i did there with all those files:
--   index.html    -> Just a forwarding site to the index.php
--   index.php     -> Handles the python processes, to see if there is already an alarm set up, generating the html file based on wether there are active alarms or not
--   upload.php    -> Very simple script to upload a new background and setting it up
--   init.php      -> Simple script for setting the standard vars for the pins, the duration and the cut-off time
--   alarm.py      -> Script to handle the alarm, the php script set up
--   killpython.py -> Kills the python-process with the id given by args
--   setColor.py   -> Sets red, green and blue led to the given args
+  
