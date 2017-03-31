@@ -49,29 +49,6 @@ $datetoday=date("Y-m-d");
 $timenow=date("H:i:s");
 $execute = shell_exec("sudo pigpiod");
 $timenow2=date("H:i");
-
-if($color != ""){
-   $color = str_replace("#", "", $color);
-   $r = hexdec(substr($color,0,2));
-   $g = hexdec(substr($color,2,2));
-   $b = hexdec(substr($color,4,2));
-   $execute = shell_exec("python /var/www/html/ledcontrol/Scripts/setColor.py $r $g $b");
-}
-if($abort != ""){
-   $execute=shell_exec("python Scripts/killpython.py $abort");
-}
-if($time != "" & $date != ""){
-   $h = substr($time,0,2);
-   $m = substr($time,3,2);
-   $dur = 30;
-   if($duration != ""){
-     $dur = $duration;
-   }
-   $day=substr($date,8,2);
-   $month=substr($date,5,2);
-   $year=substr($date,0,4);
-   $execute = exec("python /var/www/html/ledcontrol/Scripts/alarm.py $year $month $day $h $m $dur > /dev/null 2>/dev/null &");
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
