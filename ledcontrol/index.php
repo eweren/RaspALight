@@ -2,7 +2,7 @@
 ###############################################################################
 // Try catch blocks for the color, the time of an alarm and the abortion
 
-$recoveredData = file_get_contents('init.save');
+$recoveredData = file_get_contents('/var/www/html/ledcontrol/Scripts/init.save');
 $init_array = unserialize($recoveredData);
 try{
   if(isset($_GET['color'])){
@@ -55,7 +55,7 @@ $timenow2=date("H:i");
   <head>
     <meta charset="utf-8" />
     <title>RaspALight</title>
-    <link rel="icon" href="Style/tincoicon.png">
+    <link rel="icon" href="Style/raspalight.png">
     <link rel="stylesheet" type="text/css" href="Style/style.css">
     <div class="popup" id="init" onclick="myFunction()">Settings!</div>
       <span class="popuptext" id="settings"><iframe id="pop-out" src="init.php"></iframe><div id="" onclick="myFunction()"></div></span>
@@ -66,12 +66,12 @@ $timenow2=date("H:i");
         <h1><a href="index.php">Alarm</a></h1><br>
 	<div class="floater">
           <input class="halffloat" type='date' name='date' min='<?php echo("$datetoday"); ?>' value='<?php echo("$datetoday");?>'>
-          <div id="timepicker">Date</div><br>
+          <div id="timepicker" class="text">Date</div><br>
           <input class="halffloat" type='time' name='time' step='60' value='<?php echo("$timenow2");?>'>
-          <div id="timepicker">Time</div><br>
-	  <input class="fullfloat" type='range' min='0' max='120' step='2' value='<?php echo($init_array['duration'])?>'name='duration'>
-
-    <div id="timepicker">Duration</div>
+          <div id="timepicker" class="text">Time</div><br>
+          <input class="fullfloat" type='range' min='0' max='120' step='2' name='duration' value="<?php echo($init_array['duration'])?>" oninput="durationoutput.value = duration.value">
+          <br><div class="text"><output name="durationoutput" id="durationoutput"><?php echo($init_array['duration'])?></output>min
+          <div id="timepicker">Duration</div></div><br>
     </div>
       <input type='submit' id='alarmBtn' value='Set Alarm' style="margin-top:40px;">
     </form></div>

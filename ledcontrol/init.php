@@ -2,7 +2,7 @@
 ###############################################################################
 // Try catch block for the form and for getting the init setting we already set.
 try{
-  $recoveredData = file_get_contents('init.save');
+  $recoveredData = file_get_contents('/var/www/html/ledcontrol/Scripts/init.save');
   $savedArray = unserialize($recoveredData);
   $duration=$savedArray['duration'];
   $cut_off_time=$savedArray['cut_off_time'];
@@ -38,7 +38,7 @@ try{
                     'g_pin' => $g_pin,
                     'b_pin' => $b_pin);
   $serializedData = serialize($init_array);
-  file_put_contents('init.save', $serializedData);
+  file_put_contents('/var/www/html/ledcontrol/Scripts/init.save', $serializedData);
 }catch(Exception $e){
 }
 try{
@@ -55,7 +55,7 @@ try{
     $b_pin=$_GET['b_pin'];
   }
   $init_string = $r_pin . "," . $g_pin . "," . $b_pin . "," . $cut_off_time;
-  file_put_contents('pins.save', $init_string);
+  file_put_contents('/var/www/html/ledcontrol/Scripts/pins.save', $init_string);
 }catch(Exception $e){
 
 }
@@ -86,7 +86,7 @@ try{
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Tinco Lightroom</title>
+    <title>RaspALight</title>
     <link rel="icon" href="Style/tincoicon.png">
     <link rel="stylesheet" type="text/css" href="Style/style.css">
   </head>
@@ -94,17 +94,19 @@ try{
     <container>
       <form  action="init.php" method="get">
         <h1><a href="init.php">Set-up</a></h1>
-        <h2 style="opacity:0.5;">Set your standard setting up.<h2><br><br>
+        <h2 style="opacity:0.5;">Set your standard setting up.</h2><br><br>
 	       <div class="floater">
-           <input class="fullfloat" type='range' min='0' max='120' step='2' name='duration' value="<?php echo($init_array['duration'])?>"></div>
-           <div id="timepicker" class="text">Duration</div><br>
-           <input class="fullfloat" type='range' min='0' max='120' step='2' name='cut_off_time' value="<?php echo($init_array['cut_off_time'])?>"></div>
-           <div id="timepicker" class="text">Cut-off-time</div><br>
-           <input class="fullfloat" type='number' name='r_pin' value="<?php echo($init_array['r_pin'])?>"></div><br>
+           <input class="fullfloat" type='range' min='0' max='120' step='2' name='duration' value="<?php echo($init_array['duration'])?>" oninput="durationoutput.value = duration.value">
+           <br><div class="text"><output name="durationoutput" id="durationoutput"><?php echo($init_array['duration'])?></output>min
+           <div id="timepicker">Duration</div></div><br>
+           <input class="fullfloat" type='range' min='0' max='120' step='2' name='cut_off_time' value="<?php echo($init_array['cut_off_time'])?>" oninput="cutoutput.value = cut_off_time.value">
+           <br><div class="text"><output name="cutoutput" id="cutoutput"><?php echo($init_array['cut_off_time'])?></output>min
+           <div id="timepicker">Cut-off-time</div><br></div>
+           <input class="fullfloat" type='number' name='r_pin' value="<?php echo($init_array['r_pin'])?>"><br>
            <div id="timepicker" class="text">Red pin</div><br>
-           <input class="fullfloat" type='number' name='g_pin' value="<?php echo($init_array['g_pin'])?>"></div><br>
+           <input class="fullfloat" type='number' name='g_pin' value="<?php echo($init_array['g_pin'])?>"><br>
            <div id="timepicker" class="text">Green pin</div><br>
-           <input class="fullfloat" type='number' name='b_pin' value="<?php echo($init_array['b_pin'])?>"></div><br>
+           <input class="fullfloat" type='number' name='b_pin' value="<?php echo($init_array['b_pin'])?>"><br>
            <div id="timepicker" class="text">Blue pin</div><br>
 	       </div>
          <input type='submit' id='alarmBtn' value='Set standards' style="margin-top:40px;">

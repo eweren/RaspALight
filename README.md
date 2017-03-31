@@ -12,6 +12,13 @@ At this time, there should only be an index.html file. You can delete it an past
 After that, you should have the file index.html in there, as well as the folder ledcontrol.
 Make sure that the user, the webserver is running on, has permission to read, write and execute files in there.
 
+To make sure, that you have access to the LED functionality, you have to make sure, that pigpiod is running.
+-> For example you can make a Cronjob for starting pigpiod at every boot-up:
+    Therefore just type in:
+      sudo nano /etc/crontab
+      Add the following line to the end of the file:
+      @reboot root pigpiod
+
 Now, you can already access your website. To customize it, you can upload and change the background via the website, and do the rest in the index.php and style.css files.
 
 For you, to understand what i did there with all those files:
@@ -22,5 +29,3 @@ For you, to understand what i did there with all those files:
 -   alarm.py      -> Script to handle the alarm, the php script set up
 -   killpython.py -> Kills the python-process with the id given by args
 -   setColor.py   -> Sets red, green and blue led to the given args
-
-For a slight demo, of how the side will look (all buttons without a function), you can go to https://eweren.github.io/RaspALight/

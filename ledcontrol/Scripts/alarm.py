@@ -1,18 +1,17 @@
 ###### CONFIGURE THIS ######
 
 # The Pins. Use Broadcom numbers.
-file = open(“init.save”, “r”) 
-variables file.read()
-RED_PIN,GREEN_PIN,BLUE_PIN,CUT_OFF_TIME = x.split(“,”)
+FILE = open("/var/www/html/ledcontrol/Scripts/pins.save", "r")
+VARIABLES = FILE.read()
+RED_PIN,GREEN_PIN,BLUE_PIN,CUT_OFF_TIME = VARIABLES.split(",")
+RED_PIN = int(RED_PIN)
+GREEN_PIN = int(GREEN_PIN)
+BLUE_PIN = int(BLUE_PIN)
+CUT_OFF_TIME = int(CUT_OFF_TIME)
 print (RED_PIN)
 print(BLUE_PIN)
 print(GREEN_PIN)
-#RED_PIN   = 22
-
-#GREEN_PIN = 24
-
-#BLUE_PIN  = 17
-
+print(CUT_OFF_TIME)
 # Number of brightness change per step (more is faster, less is slower).
 
 # You also can use 0.X floats.
@@ -48,8 +47,6 @@ hp = sys.argv[4]
 mp = sys.argv[5]
 
 duration =sys.argv[6]
-
-cutofftime = sys.argv[7]
 
 startzeit=datetime.datetime(2000, 1, 1, 1, 1, 1)
 
@@ -140,7 +137,7 @@ def cut_off():
     cutofftime
     while  cutofftime > 0:
             time.sleep(60)
-            cutofftime = cutofftim - 1;
+            CUT_OFF_TIME = CUT_OFF_TIME - 1;
     abort = true;
 
 
@@ -150,10 +147,6 @@ setLights(GREEN_PIN, g)
 
 setLights(BLUE_PIN, b)
 
-
-
-
-print(time.time())
 while abort == False:
         hops = float(durationint)
         if state and not brightChanged:
@@ -171,13 +164,17 @@ while abort == False:
                         bright = bright + STEPS
 
                 elif bright >= 255:
-                        print (time.time())
-                        while  cutofftime > 0:
+                        print("Alarm finished")
+                        while  CUT_OFF_TIME > 0:
+                                CUT_OFF_TIME = CUT_OFF_TIME - 1;
                                 time.sleep(60)
-                                cutofftime = cutofftime - 1;
                         abort = true;
 print ("Aborting...")
+setLights(RED_PIN, 0)
 
+setLights(GREEN_PIN, 0)
+
+setLights(BLUE_PIN, 0)
 time.sleep(0.5)
 
 pi.stop()
