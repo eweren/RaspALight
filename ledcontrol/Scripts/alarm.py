@@ -122,8 +122,7 @@ def checkKey():
         global brightChanged
         global state
         global abort
-        while True:
-                c = getCh()
+        while True:                c = getCh()
                 if c == 'c' and not abort:
                         abort = True
                         break
@@ -168,7 +167,7 @@ while abort == False:
                         while  CUT_OFF_TIME > 0:
                                 CUT_OFF_TIME = CUT_OFF_TIME - 1;
                                 time.sleep(60)
-                        abort = true;
+                        abort = True;
 print ("Aborting...")
 setLights(RED_PIN, 0)
 
