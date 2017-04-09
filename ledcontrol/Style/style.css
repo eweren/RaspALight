@@ -122,6 +122,15 @@ a:visited{
           text-align: center;
           border-left: 2px dashed white;
       }
+	  .popuptext2 {
+          position: relative;
+          z-index: 1;
+		  margin-left:auto;
+		  margin-right:auto;
+          display: none;
+          border: none;
+		  padding:20px;
+      }
 
       /* Toggle this class - hide and show the popup */
       .show {
@@ -129,6 +138,11 @@ a:visited{
           -webkit-animation: fadeIn 1s;
           animation: fadeIn 1s;
       }
+	  .show2 {
+		  display:block;
+		  -webkit-animation: fadeIn 1s;
+		  animation: fadeIn 1s;
+	  }
       #timepicker{
 	font-size:1.3em;
   z-index: -10;
@@ -378,6 +392,27 @@ input[type=range]:focus::-ms-fill-upper {
         color:white;
         border-radius:60px;
         opacity:0.5;
+      }
+	  #btn:hover {
+        width:300px;
+        height:40px;
+        border:1px solid rgba(0,0,0,0.5);
+        background-color:rgba(200,200,200,0.5);
+        color:black;
+        border-radius:60px;
+        opacity:1;
+      }
+      #btn {
+        font-family:thin;
+        width:300px;
+        height:40px;
+        font-size:1.3em;
+        border:none;
+        background-color:black;
+        color:white;
+        border-radius:60px;
+        opacity:0.5;
+		vertical-align: middle;
       }
       td input[type=submit]:hover {
 	width:60px;
@@ -674,3 +709,33 @@ input[type=range]::-ms-thumb {
       }
 
 }
+input[type=checkbox].css-checkbox {
+							position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+						}
+
+						input[type=checkbox].css-checkbox + label.css-label {
+							padding-left:29px;
+							height:24px; 
+							display:inline-block;
+							line-height:24px;
+							background-repeat:no-repeat;
+							background-position: 0 0;
+							font-size:24px;
+							vertical-align:middle;
+							cursor:pointer;
+
+						}
+
+						input[type=checkbox].css-checkbox:checked + label.css-label {
+							background-position: 0 -24px;
+						}
+						label.css-label {
+				background-image:url(checkbox.png);
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				margin-bottom:10px;
+			}

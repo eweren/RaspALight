@@ -1,179 +1,115 @@
-###### CONFIGURE THIS ######
-
-# The Pins. Use Broadcom numbers.
-FILE = open("/var/www/html/ledcontrol/Scripts/pins.save", "r")
-VARIABLES = FILE.read()
-RED_PIN,GREEN_PIN,BLUE_PIN,CUT_OFF_TIME = VARIABLES.split(",")
-RED_PIN = int(RED_PIN)
-GREEN_PIN = int(GREEN_PIN)
-BLUE_PIN = int(BLUE_PIN)
-CUT_OFF_TIME = int(CUT_OFF_TIME)
-print (RED_PIN)
-print(BLUE_PIN)
-print(GREEN_PIN)
-print(CUT_OFF_TIME)
-# Number of brightness change per step (more is faster, less is slower).
-
-# You also can use 0.X floats.
-
-STEPS     = 0.01
-
-###### END ######
-
-import os
-
-import sys
-
-import termios
-
-import tty
-
-import pigpio
+##########################################################################
+#   #######     #######   ###            ######            ##   ######   #
+##   #####   #   #####   ##   ###########   ###   #######   #   ####   ###
+###   ###   ###   ###   ##   #############   ##            ##   #   ######
+####   #   #####   #   ####    ##########   ###   ###   #####      #######
+#####     #######     #######    ####   #######   ####   ####   ##   #####
+######   #########   ###########     ##########   #####   ###   ####   ###
+##########################################################################
 
 import time
 
 import datetime
 
-from thread import start_new_thread
+import time
 
-yop = sys.argv[1]
+from timemaker import *
 
-mop = sys.argv[2]
+###############################################################################
+## Alarm object with vars for start and endtime, as well as its repetition ####
+class alarm(object):
+    def __init__(self, alarmarray):
+        self.duration = alarmarray.get('duration')
+        self.cutoff = alarmarray.get('cutoff')
+        self.starttime = getStarttime(alarmarray)
+        self.endtime = getEndtime(alarmarray)
+        self.hasNoRepetition = hasNoRepetition(alarmarray)
+        self.repetition = [int(alarmarray.get('monday')),int(alarmarray.get('tuesday')),
+        int(alarmarray.get('wednesday')),int(alarmarray.get('thursday')),int(alarmarray.get('friday')),
+        int(alarmarray.get('saturday')),int(alarmarray.get('sunday'))]
+        self.ident = time.mktime(self.starttime.timetuple())
 
-dp = sys.argv[3]
+        #if(not isValid()):
+        #   raise ValueError
+    def getIdent(self):
+        return self.ident
 
-hp = sys.argv[4]
+    def getStarttime(self):
+        return self.starttime
 
-mp = sys.argv[5]
+    def get(self, s):
+        if(s=="year"):
+            return str(self.endtime.year)
+        if(s=="month"):
+            return str(self.endtime.month)
+        if(s=="day"):
+            return str(self.endtime.day)
+        if(s=="hour"):
+            return str(self.endtime.hour)
+        if(s=="minute"):
+            return str(self.endtime.minute)
+        if(s=="duration"):
+            return str(self.duration)
+        if(s=="cutoff"):
+            return str(self.cutoff)
+        if(s=="monday"):
+            return str(self.repetition[0])
+        if(s=="tuesday"):
+            return str(self.repetition[1])
+        if(s=="wednesday"):
+            return str(self.repetition[2])
+        if(s=="thursday"):
+            return str(self.repetition[3])
+        if(s=="friday"):
+            return str(self.repetition[4])
+        if(s=="saturday"):
+            return str(self.repetition[5])
+        if(s=="sunday"):
+            return str(self.repetition[6])
 
-duration =sys.argv[6]
+    def getEndtime(self):
+        return self.endtime
 
-startzeit=datetime.datetime(2000, 1, 1, 1, 1, 1)
+    def getDuration(self):
+        return self.duration
 
-jetzt = datetime.datetime.now()
+    def getCutoff(self):
+        return self.cutoff
 
-hint = int(hp) - 1
-mint = int(mp)
-durationint = int(duration)
-_TIME_ALARM = datetime.datetime(int(yop),int(mop),int(dp),int(hp),int(mp))
-__TIMEDELTA_DURATION = datetime.timedelta(minutes = int(duration))
-startzeit = _TIME_ALARM - __TIMEDELTA_DURATION
+    def hasNoRep(self):
+        return self.hasNoRepetition
 
+###############################################################################
+############ Returns the next date, the alarm should be active ################
+    def getNextRepetition(self):
+        nextDate = -1
+        curDay = datetime.date.weekday(self.starttime)
+        counter = 0
+        # iterate over all the coming repetition days (wednesday to sunday
+        # if it is tuesday)
+        for item in self.repetition[(curDay + 1):]:
+            if item == 1 and nextDate == -1:
+                counter += 1
+                nextDate = counter
+            counter += 1
+        #if there was no repetition in the last part of the list,
+        # search the rest
+        if nextDate == -1 and curDay != -1:
+            for item in self.repetition:
+                if item == 1 and nextDate == -1:
+                    counter += 1
+                    nextDate = counter
+                counter += 1
+        return nextDate
 
-print "Wecker Startzeit"
-print startzeit
+###############################################################################
+############# Returns if the alarm is valid or not ############################
+    def isValid(self):
+        return self.starttime > datetime.datetime.now()
 
-bright = 0.00
-
-r = 255.00
-
-g = 35.00
-
-b = 0.00
-
-
-
-brightChanged = False
-
-abort = False
-
-state = True
-
-pi = pigpio.pi()
-
-def updateColor(color, step):
-
-        color += step
-
-
-        if color > 255:
-
-                return 255
-
-        if color < 0:
-
-                return 0
-
-
-
-        return color
-def setLights(pin, brightness):
-
-        realBrightness = int(int(brightness) * (float(bright) / 255.0))
-
-        pi.set_PWM_dutycycle(pin, realBrightness)
-
-
-
-
-
-def getCh():
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-                tty.setraw(fd)
-                ch = sys.stdin.read(1)
-        finally:
-                termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
-
-def checkKey():
-        global bright
-        global brightChanged
-        global state
-        global abort
-        while True:                c = getCh()
-                if c == 'c' and not abort:
-                        abort = True
-                        break
-
-start_new_thread(checkKey, ())
-
-print ("c = Wecker abbrechen")
-
-
-def cut_off():
-    cutofftime
-    while  cutofftime > 0:
-            time.sleep(60)
-            CUT_OFF_TIME = CUT_OFF_TIME - 1;
-    abort = true;
-
-
-setLights(RED_PIN, r)
-
-setLights(GREEN_PIN, g)
-
-setLights(BLUE_PIN, b)
-
-while abort == False:
-        hops = float(durationint)
-        if state and not brightChanged:
-
-                if bright < 255:
-                        while  datetime.datetime.now() < startzeit:
-                                time.sleep(10)
-
-                        brightChanged = True
-                        time.sleep(hops * 60 / 255 * STEPS)
-                        brightChanged = False
-                        setLights(RED_PIN, r)
-                        setLights(GREEN_PIN, g)
-
-                        bright = bright + STEPS
-
-                elif bright >= 255:
-                        print("Alarm finished")
-                        while  CUT_OFF_TIME > 0:
-                                CUT_OFF_TIME = CUT_OFF_TIME - 1;
-                                time.sleep(60)
-                        abort = True;
-print ("Aborting...")
-setLights(RED_PIN, 0)
-
-setLights(GREEN_PIN, 0)
-
-setLights(BLUE_PIN, 0)
-time.sleep(0.5)
-
-pi.stop()
+###############################################################################
+###################### Calculates the next alarm-time #########################
+    def calcNext(self):
+        nextDate = self.getNextRepetition()
+        self.starttime = self.starttime + datetime.timedelta(days = nextDate)
+        self.endtime = self.endtime + datetime.timedelta(days = nextDate)

@@ -2,7 +2,7 @@
 ###############################################################################
 // Try catch block for the form and for getting the init setting we already set.
 try{
-  $recoveredData = file_get_contents('/var/www/html/ledcontrol/Scripts/init.save');
+  $recoveredData = file_get_contents('Scripts/init.save');
   $savedArray = unserialize($recoveredData);
   $duration=$savedArray['duration'];
   $cut_off_time=$savedArray['cut_off_time'];
@@ -38,7 +38,7 @@ try{
                     'g_pin' => $g_pin,
                     'b_pin' => $b_pin);
   $serializedData = serialize($init_array);
-  file_put_contents('/var/www/html/ledcontrol/Scripts/init.save', $serializedData);
+  file_put_contents('Scripts/init.save', $serializedData);
 }catch(Exception $e){
 }
 try{
@@ -55,7 +55,7 @@ try{
     $b_pin=$_GET['b_pin'];
   }
   $init_string = $r_pin . "," . $g_pin . "," . $b_pin . "," . $cut_off_time;
-  file_put_contents('/var/www/html/ledcontrol/Scripts/pins.save', $init_string);
+  file_put_contents('Scripts/pins.save', $init_string);
 }catch(Exception $e){
 
 }

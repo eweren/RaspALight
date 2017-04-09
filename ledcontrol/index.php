@@ -2,42 +2,117 @@
 ###############################################################################
 // Try catch blocks for the color, the time of an alarm and the abortion
 
-$recoveredData = file_get_contents('/var/www/html/ledcontrol/Scripts/init.save');
+$recoveredData = file_get_contents('Scripts/init.save');
 $init_array = unserialize($recoveredData);
+
+$recoveredData1 = file_get_contents('Scripts/alarms.save');
+$alarms_array = unserialize($recoveredData1);
+
+###############################################################################
+###################Catching the colors of the color-picker#####################
 try{
-  if(isset($_GET['color'])){
-    $color=$_GET['color'];
+  if(isset($_POST['color'])){
+    $color=$_POST['color'];
     $color = str_replace("#", "", $color);
     $r = hexdec(substr($color,0,2));
     $g = hexdec(substr($color,2,2));
     $b = hexdec(substr($color,4,2));
-    $execute = shell_exec("python /var/www/html/ledcontrol/Scripts/setColor.py $r $g $b");
+    #$execute = shell_exec("python Scripts/setColor.py $r $g $b");
   }
 } catch(Exception $e){
   $color="";
 }
-
+###############################################################################
+############################Catch the alarm time###############################
 try{
-  if(isset($_GET['time']) && isset($_GET['date']) && isset($_GET['duration'])){
-    $h = substr($_GET['time'],0,2);
-    $m = substr($_GET['time'],3,2);
-    $date = $_GET['date'];
-    $dur = $_GET['duration'];
+  if(isset($_POST['time']) && isset($_POST['date']) && isset($_POST['duration'])){
+    $h = substr($_POST['time'],0,2);
+    $m = substr($_POST['time'],3,2);
+    $date = $_POST['date'];
+    $dur = $_POST['duration'];
     $day=substr($date,8,2);
     $month=substr($date,5,2);
     $year=substr($date,0,4);
     $cut = $init_array['cut_off_time'];
-    $execute = exec("python /var/www/html/ledcontrol/Scripts/alarm.py $year $month $day $h $m $dur $cut > /dev/null 2>/dev/null &");
+	$monday = "0";
+	$tuesday = "0";
+	$wednesday = "0";
+	$thursday = "0";
+	$friday = "0";
+	$saturday = "0";
+	$sunday = "0";
+	if(isset($_POST['monday'])){
+    if($_POST['monday']!=""){
+		    $monday = $_POST['monday'];
+    }
+	}
+  if(isset($_POST['tuesday'])){
+    if($_POST['tuesday']!=""){
+		    $tuesday = $_POST['tuesday'];
+    }
+	}
+  if(isset($_POST['wednesday'])){
+    if($_POST['wednesday']!=""){
+		    $wednesday = $_POST['wednesday'];
+    }
+	}
+  if(isset($_POST['thursday'])){
+    if($_POST['thursday']!=""){
+		    $thursday = $_POST['thursday'];
+    }
+	}
+  if(isset($_POST['friday'])){
+    if($_POST['friday']!=""){
+		    $friday = $_POST['friday'];
+    }
+	}
+  if(isset($_POST['saturday'])){
+    if($_POST['saturday']!=""){
+		    $saturday = $_POST['saturday'];
+    }
+	}
+  if(isset($_POST['sunday'])){
+    if($_POST['sunday']!=""){
+		    $sunday = $_POST['sunday'];
+    }
+	}
+	$alarm = array(array('year' => $year,
+							'month' => $month,
+							'day' => $day,
+							'hour' => $h,
+							'minute' => $m,
+							'duration' => $dur,
+							'cutoff' => $cut,
+							'monday' => $monday,
+							'tuesday' => $tuesday,
+							'wednesday' => $wednesday,
+							'thursday' => $thursday,
+							'friday' => $friday,
+							'saturday' => $saturday,
+							'sunday' => $sunday));
+	if(is_array($alarms_array)){
+		$merged = array_merge($alarms_array, $alarm);
+	}else{
+		$merged = $alarm;
+	}
+
+	$serializedData = serialize($merged);
+	 file_put_contents('Scripts/alarms.save', $serializedData);
+   header("Refresh: 0");
   }
 }catch(Exception $e){
   $time="";
   $date="";
 }
 
+###############################################################################
+#########Catch the alarm the user wants to delete and updates the .save########
 try{
-  if(isset($_GET['abort'])){
-    $abort=$_GET['abort'];
-    $execute=shell_exec("python Scripts/killpython.py $abort");
+  if(isset($_POST['abort'])){
+    $abort=$_POST['abort'];
+    array_splice($alarms_array,$abort,1);
+    $serializedData = serialize($alarms_array);
+    file_put_contents("Scripts/alarms.save", $serializedData);
   }
 }catch(Exception $e){
   $abort="";
@@ -46,8 +121,7 @@ try{
 
 
 $datetoday=date("Y-m-d");
-$timenow=date("H:i:s");
-$execute = shell_exec("sudo pigpiod");
+#$timenow=date("H:i:s");
 $timenow2=date("H:i");
 ?>
 <!DOCTYPE html>
@@ -57,12 +131,12 @@ $timenow2=date("H:i");
     <title>RaspALight</title>
     <link rel="icon" href="Style/raspalight.png">
     <link rel="stylesheet" type="text/css" href="Style/style.css">
-    <div class="popup" id="init" onclick="myFunction()">Settings!</div>
+    <div class="popup" id="init" onclick="openSettings()">Settings!</div>
       <span class="popuptext" id="settings"><iframe id="pop-out" src="init.php"></iframe><div id="" onclick="myFunction()"></div></span>
   </head>
   <body>
     <container>
-      <form  action="index.php" method="get">
+      <form  action="index.php" method="post">
         <h1><a href="index.php">Alarm</a></h1><br>
 	<div class="floater">
           <input class="halffloat" type='date' name='date' min='<?php echo("$datetoday"); ?>' value='<?php echo("$datetoday");?>'>
@@ -72,23 +146,52 @@ $timenow2=date("H:i");
           <input class="fullfloat" type='range' min='0' max='120' step='2' name='duration' value="<?php echo($init_array['duration'])?>" oninput="durationoutput.value = duration.value">
           <br><div class="text"><output name="durationoutput" id="durationoutput"><?php echo($init_array['duration'])?></output>min
           <div id="timepicker">Duration</div></div><br>
+		  <button type="button" class="popup" id="btn" onclick="openRepeat()">Repeat</button>
+		  <span class="popuptext2" id="repeat">
+		  <div style="margin-left:50px;text-align:left">
+			<input type="checkbox" name="monday" id="monday" class="css-checkbox" value="1"/>
+			<label for="monday" class="css-label">Monday</label>
+			<br>
+			<input type="checkbox" name="tuesday" id="tuesday" class="css-checkbox" value="1"/>
+			<label for="tuesday" class="css-label">Tuesday</label>
+			<br>
+			<input type="checkbox" name="wednesday" id="wednesday" class="css-checkbox" value="1"/>
+			<label for="wednesday" class="css-label">Wednesday</label>
+			<br>
+			<input type="checkbox" name="thursday" id="thursday" class="css-checkbox" value="1"/>
+			<label for="thursday" class="css-label">Thursday</label>
+			<br>
+			<input type="checkbox" name="friday" id="friday" class="css-checkbox" value="1"/>
+			<label for="friday" class="css-label">Friday</label>
+			<br>
+			<input type="checkbox" name="saturday" id="saturday" class="css-checkbox" value="1"/>
+			<label for="saturday" class="css-label">Saturday</label>
+			<br>
+			<input type="checkbox" name="sunday" id="sunday" class="css-checkbox" value="1"/>
+			<label for="sunday" class="css-label">Sunday</label>
+			<br>
+		</div>
+		</span>
     </div>
       <input type='submit' id='alarmBtn' value='Set Alarm' style="margin-top:40px;">
     </form></div>
       <?php
-	exec("pgrep -af ledcontrol/Scripts/alarm.py", $out);
-	if(sizeof($out) > 1){
-      	  echo("<form action='index.php' method='get'>");
+	  if(is_array($alarms_array) && sizeof($alarms_array)>0){
+      	  echo("<form action='index.php' method='post'>");
           echo("<select name='abort'>");
-          $i=0;
-             while($out[$i] != ""){
-                $arrayAlarms = explode(" ", $out[$i]);
-                if($i < sizeof($out)-1){
-                  echo("<option style='padding-left:40px;' value='$arrayAlarms[0]'>$arrayAlarms[5].$arrayAlarms[4] - $arrayAlarms[6]:$arrayAlarms[7] - $arrayAlarms[8] min");
-                }
-                $i = $i+1;
-             }
-          echo("</select><br><input type='submit' value='Abort alarm'></form>");
+		  $i = 0;
+             while($alarms_array[$i] != ""){
+				                $y=$alarms_array[$i]['year'];
+				                $m=$alarms_array[$i]['month'];
+              				  $d=$alarms_array[$i]['day'];
+              				  $h=$alarms_array[$i]['hour'];
+              				  $mi=$alarms_array[$i]['minute'];
+              				  $du=$alarms_array[$i]['duration'];
+                  echo("<option style='padding-left:4$ipx;' value='$i'>$y.$m.$d - $h:$mi - $du min</option>");
+				  $i = $i+1;
+            }
+        echo("</select><br><input type='submit' value='Abort alarm'></form>");
+
         }
     ?><br><br>
     <h1>Colorgroup</h1>
@@ -233,11 +336,13 @@ $timenow2=date("H:i");
     </div>
     </container>
     <script>
-      // When the user clicks on div, open the popup
-      function myFunction() {
+      function openSettings() {
           var popup = document.getElementById("settings");
           popup.classList.toggle("show");
-
+      }
+	  function openRepeat() {
+          var popup = document.getElementById("repeat");
+          popup.classList.toggle("show2");
       }
     </script>
   </body>
