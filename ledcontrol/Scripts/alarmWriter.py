@@ -38,15 +38,9 @@ def writeAlarms(alarms):
         counter += 1
     ausgabe += "}"
 
-    #f = os.path.getmtime('alarms.save')
-    #if(int(f) != lasttime):
     target = open('alarms.save', 'w')
     target.write(ausgabe)
     target.close()
-    #return int(f)
-    #else:
-    #    print("Alt gelassen")
-        #return lasttime
 
 
 ##############################################################################

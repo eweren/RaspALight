@@ -20,9 +20,9 @@ import subprocess, signal
 
 from alarm import *
 
-from alarmParser import *
+from alarmParser import parseAlarms
 
-from alarmWriter import *
+from alarmWriter import writeAlarms
 
 from threading import *
 
@@ -38,11 +38,12 @@ def sort(a):
 #########################################################################
 ############ Uses the parse function to fill the alarm-list #############
 def getAlarms():
-        x = parseAlarms()
-        for a in x:
-            talarm = alarm(a)
-            alarms.append(talarm)
-        return alarms
+    alarms = []
+    x = parseAlarms()
+    for a in x:
+        talarm = alarm(a)
+        alarms.append(talarm)
+    return alarms
 
 #########################################################################
 ###### Handles the alarms. Starts new thread, when old one finished #####
@@ -51,31 +52,27 @@ def handle():
     sort(alarms)
     writeAlarms(alarms)
     if(len(alarms)>0):
-        thread = Thread(target = alarmexec.wait, args = (alarms[0].getStarttime(), alarms[0].getDuration(), alarms[0].getCutoff(), ))
+        alarm = alarms[0]
+        thread = Thread(target = alarmexec.wait, args = (alarm.getStarttime(), alarm.getDuration(), alarm.getCutoff(), ))
         # Starts the alarms as a new thread
         thread.start()
-        # Gets the ID of the thread
-        print("------------------------")
-        idt=thread.ident
-        print(idt)
-        #thread.kill()
-        print("------------------------")
-        # Ends the thread if finished
-        thread.join()
-        #ID = sys.argv[1]
-        #os.kill(int(ID), signal.SIGKILL)
-        print ("thread finished...exiting")
-        #start_new_thread(alarmexec.wait(alarms[0].getStarttime(), alarms[0].getDuration(), alarms[0].getCutoff()))
+        # Catches the return statement of the thread -> True if it has
+        # been aborted via web, False if it run through
+        abort = thread.join()
+        alarms = getAlarms()
         # Deletes the finished alarm, if it has no repetition
-        if(alarms[0].hasNoRep()):
+        if(alarm.hasNoRep() and ((alarm.getEndtime() + datetime.timedelta(minutes = int(alarm.getCutoff()))) < datetime.datetime.now())):
             del alarms[0]
         # If it has repetition, the next alarm will be calculated
-        else:
+        elif((alarm.getEndtime() + datetime.timedelta(minutes = int(alarm.getCutoff()))) < datetime.datetime.now()):
             alarms[0].calcNext()
+
         # Updated alarms are written to the save file
         writeAlarms(alarms)
+    else:
+        sys.exit()
+    time.sleep(1)
 
-#while(True):
-handle()
-#print("Wait for an alarm")
-#time.sleep(10)
+while(True):
+    handle()
+#sys.exit()

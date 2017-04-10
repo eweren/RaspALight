@@ -113,6 +113,7 @@ try{
     array_splice($alarms_array,$abort,1);
     $serializedData = serialize($alarms_array);
     file_put_contents("Scripts/alarms.save", $serializedData);
+    file_put_contents("Scripts/abort.save", $abort);
   }
 }catch(Exception $e){
   $abort="";

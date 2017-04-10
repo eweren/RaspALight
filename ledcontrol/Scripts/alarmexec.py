@@ -6,6 +6,13 @@
 #####     #######     #######    ####   #######   ####   ####   ##   #####
 ######   #########   ###########     ##########   #####   ###   ####   ###
 ##########################################################################
+import os
+import sys
+import datetime
+import time
+#import tty
+#import pigpio
+
 ###### CONFIGURE THIS ######
 # Standard config.
 RED_PIN   = 22
@@ -22,15 +29,6 @@ for x in file:
 
 STEPS     = 1
 
-###### END ######
-import os
-import sys
-import datetime
-import time
-#import tty
-#import pigpio
-#from thread import start_new_thread
-
 bright = 0.00
 r = 255.00
 g = 35.00
@@ -44,11 +42,18 @@ def setLights(pin, brightness):
 
 #Wait until the alarm has to start. Trigger the light up def
 def wait(timeobj, duration, co):
+	print("Next Alarm: ", timeobj)
 	while datetime.datetime.now() < timeobj:
-		print("Next Alarm: ", timeobj)
-		time.sleep((timeobj - datetime.datetime.now()).total_seconds())
-	lightUp(int(duration)-(timeobj-datetime.datetime.now()).total_seconds())
+		with open('abort.save', 'r') as f:
+			file1 = f.read()
+			if(file1 is "0"):
+				with open('abort.save', 'w') as w:
+					w.write("")
+				return(True)
+		time.sleep(5)
+	lightUp(int(duration))
 	cutOff(co)
+	return(False)
 
 #Slowly lighten up based on the duration.
 def lightUp(duration):
