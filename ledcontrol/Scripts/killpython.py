@@ -1,5 +1,5 @@
 import os
-import subprocess, signal
+import signal
 import sys
 
 ID = sys.argv[1]

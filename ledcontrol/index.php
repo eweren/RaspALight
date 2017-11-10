@@ -188,7 +188,7 @@ $timenow2=date("H:i");
               				  $h=$alarms_array[$i]['hour'];
               				  $mi=$alarms_array[$i]['minute'];
               				  $du=$alarms_array[$i]['duration'];
-                  echo("<option style='padding-left:4$ipx;' value='$i'>$y.$m.$d - $h:$mi - $du min</option>");
+                  echo("<option style='padding-left:4$ipx;' value='$i'>$y.$m.$d - $h:$mi - $du -- $monday -- $tuesday min</option>");
 				  $i = $i+1;
             }
         echo("</select><br><input type='submit' value='Abort alarm'></form>");

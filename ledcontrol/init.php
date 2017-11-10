@@ -42,9 +42,6 @@ try{
 }catch(Exception $e){
 }
 try{
-  if(isset($_GET['cut_off_time'])){
-    $cut_off_time = $_GET['cut_off_time'];
-  }
   if(isset($_GET['r_pin'])){
     $r_pin=$_GET['r_pin'];
   }
@@ -54,7 +51,7 @@ try{
   if(isset($_GET['b_pin'])){
     $b_pin=$_GET['b_pin'];
   }
-  $init_string = $r_pin . "," . $g_pin . "," . $b_pin . "," . $cut_off_time;
+  $init_string = $r_pin . "," . $g_pin . "," . $b_pin;
   file_put_contents('Scripts/pins.save', $init_string);
 }catch(Exception $e){
 

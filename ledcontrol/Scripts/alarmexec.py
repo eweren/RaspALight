@@ -1,87 +1,100 @@
-##########################################################################
-#   #######     #######   ###            ######            ##   ######   #
-##   #####   #   #####   ##   ###########   ###   #######   #   ####   ###
-###   ###   ###   ###   ##   #############   ##            ##   #   ######
-####   #   #####   #   ####    ##########   ###   ###   #####      #######
-#####     #######     #######    ####   #######   ####   ####   ##   #####
-######   #########   ###########     ##########   #####   ###   ####   ###
-##########################################################################
 import os
 import sys
 import datetime
 import time
-#import tty
-#import pigpio
+from Scripts.pinparser import parse_pins
+from Scripts.setColor import set_lights
+from Scripts.alarmParser import parse_alarms
+from Scripts.alarm import alarm
 
-###### CONFIGURE THIS ######
+# import tty
+# import pigpio
+
 # Standard config.
-RED_PIN   = 22
-GREEN_PIN = 24
-BLUE_PIN  = 17
+pins = parse_pins()
+RED_PIN = int(pins[0])
+GREEN_PIN = int(pins[1])
+BLUE_PIN = int(pins[2])
 
-# Get the custon pin numbers.
-with open('settings.save') as f: file = [line.rstrip('\n') for line in f]
+# Get the custom pin numbers.
+with open('settings.save') as f:
+    file = [line.rstrip('\n') for line in f]
 for x in file:
-	settings = x.split(",")
-	RED_PIN=settings[0]
-	GREEN_PIN = settings[1]
-	BLUE_PIN = settings[2]
+    settings = x.split(",")
+    RED_PIN = settings[0]
+    GREEN_PIN = settings[1]
+    BLUE_PIN = settings[2]
 
-STEPS     = 1
+STEPS = 1
 
 bright = 0.00
-r = 255.00
-g = 35.00
+r = 0.00
+g = 0.00
 b = 0.00
 
-def setLights(pin, brightness):
-	x=0
-        #realBrightness = int(int(brightness) * (float(bright) / 255.0))
 
-        #pi.set_PWM_dutycycle(pin, realBrightness)
+# Wait until the alarm has to start. Trigger the light up def
+def wait(old_timeobj, duration, co):
+    print("Next Alarm: ", old_timeobj, " - ", duration)
+    while datetime.datetime.now() < old_timeobj:
+        time.sleep(5)
+    if light_up(int(duration), old_timeobj):
+        cut_off(co, old_timeobj)
+    return False
 
-#Wait until the alarm has to start. Trigger the light up def
-def wait(timeobj, duration, co):
-	print("Next Alarm: ", timeobj)
-	while datetime.datetime.now() < timeobj:
-		with open('abort.save', 'r') as f:
-			file1 = f.read()
-			if(file1 is "0"):
-				with open('abort.save', 'w') as w:
-					w.write("")
-				return(True)
-		time.sleep(5)
-	lightUp(int(duration))
-	cutOff(co)
-	return(False)
 
-#Slowly lighten up based on the duration.
-def lightUp(duration):
-	hops = float(duration) * 60
-	abort = False
-	bright = 0
+# Slowly lighten up based on the duration.
+# Return True, if it ran through and False if the alarm was cancelled.
+def light_up(duration, old_timeobj):
+    abort = False
+    hops = float(duration) * 60 / 255 * STEPS
+    print("Dimmen beginnt!")
+    d = datetime.datetime.now()
+    print("Uhrzeit:", d.time())
+    # var for setting g one up every seventh time of r
+    i = 0
+    global r
+    r = 0.0
+    global g
+    g = 0.0
+    global bright
+    bright = 0
+    while bright < 255 and not abort:
+        print(bright)
+        with open('abort.save', 'r') as f:
+            content = f.read()
+        for letter in content:
+            if letter == "1":
+                target = open('abort.save', 'w')
+                target.write("0")
+                target.close()
+                return False
+        i = i + 1
+        time.sleep(hops)
+        r = r + 1
+        set_lights(RED_PIN, r, False)
+        if i % 7 == 0:
+            g = g + 1
+            set_lights(GREEN_PIN, g, False)
+        bright = bright + STEPS
+    d = datetime.datetime.now()
+    print("Uhrzeit:", d.time())
+    return True
 
-	while(abort == False):
-		if bright < 255:
-			time.sleep(hops / 255 * STEPS)
-			setLights(RED_PIN, r)
-			setLights(GREEN_PIN, g)
-			bright = bright + STEPS
-			print(bright)
-		elif bright >= 255:
-			abort=True;
 
-#Slowly lighten down based on the cutoff time
-def cutOff(co):
-	hops = float(co)
-	bright=255;
-	while bright>0:
-		time.sleep(hops * 60 / 255 * STEPS)
-		setLights(RED_PIN, r)
-		setLights(GREEN_PIN, g)
-		bright = bright - STEPS
-		print(bright)
+# Slowly lighten down based on the cutoff time
+def cut_off(co, old_timeobj):
+    global r
+    global b
+    hops = float(co)
+    bright = 255;
+    while bright > 0:
+        time.sleep(hops * 60 / 255 * STEPS)
+        set_lights(RED_PIN, r, False)
+        set_lights(GREEN_PIN, g, False)
+        bright = bright - STEPS
 
-#time.sleep(0.5)
 
-#pi.stop()
+# time.sleep(0.5)
+
+# pi.stop()
